@@ -1,0 +1,16 @@
+.homeContent {
+  margin-bottom: 50px;
+}
+.recipeCard {
+  min-height: 400px;
+  box-shadow:2px 2px 3px solid rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.card-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 250px;
+}

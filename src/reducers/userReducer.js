@@ -10,8 +10,8 @@ export default function(state = initialState, action) {
     case GET_USER:
       return {
         ...state,
-        user: action.payload.uid,
-        userId: action.payload
+        user: action.payload,
+        userId: action.payload && action.payload.uid ? action.payload.uid : null
       };
     case SET_USER:
       return {

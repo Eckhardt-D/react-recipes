@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { fetchRecipes } from '../actions/recipeActions';
+import { auth } from '../services/firebase'
 
 import {
   Container,
@@ -15,6 +16,9 @@ import './OneRecipe.css'
 import Navigation from '../components/Navigation'
 
 class OneRecipe extends Component {
+  componentWillMount() {
+    auth.onAuthStateChanged(user => !user ? window.location.href = '/' : null) 
+  }
   componentDidMount() {
     this.props.fetchRecipes()
   }

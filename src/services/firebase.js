@@ -1,4 +1,5 @@
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import 'firebase/firestore'
 
 var config = {
@@ -16,13 +17,5 @@ export default firebase
 export const db = firebase.firestore()
 
 firebase.auth().useDeviceLanguage()
-
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
-    'size': 'invisible',
-    'callback': function(response) {
-      // reCAPTCHA solved, allow signInWithPhoneNumber.
-      onSignInSubmit();
-    }
-});
 
 export const auth = firebase.auth()

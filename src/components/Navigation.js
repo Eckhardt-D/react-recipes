@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {auth} from '../services/firebase'
 
 import {
   Collapse,
@@ -17,7 +18,8 @@ export default class Navigation extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      user: auth.currentUser
     };
   }
   toggle() {
@@ -27,6 +29,11 @@ export default class Navigation extends Component {
   }
   onChange(e) {
     console.log(e)
+  }
+  logOut() {
+    auth.signOut().then(() => {
+      this.props.history.push('/')
+    })
   }
   render() {
     return (
@@ -44,6 +51,9 @@ export default class Navigation extends Component {
               </NavItem>
               <NavItem>
                 <NavLink href="/new">Add Recipe</NavLink>
+              </NavItem>
+              <NavItem>
+                {this.state.user ? <NavLink onClick={this.logOut} href="#">Logout</NavLink> : null}
               </NavItem>
             </Nav>
           </Collapse>

@@ -3,6 +3,8 @@ import { auth } from '../services/firebase'
 import Navigation from '../components/Navigation'
 import Landing from '../components/Landing'
 
+import {Input} from 'reactstrap'
+
 import { connect } from 'react-redux'
 import { setUser, getUser } from '../actions/userActions'
 
@@ -13,63 +15,72 @@ class Login extends Component {
         this.state = {
             number: '',
             code: '',
-            entered: false,
-            isError: false
+            hasSent: false,
+            buttonShouldSend: false,
+            renderPage: false
         }
 
         this.onButtonClick = this.onButtonClick.bind(this)
-        this.onChange = this.onChange().bind(this)
+        this.onChange = this.onChange.bind(this)
+        this.confirmMessage = this.confirmMessage.bind(this)
     }
 
-    componentDidMount() {
-        this.props.getUser()
+    componentWillMount() {
+        this.props.getUser().then(() => {
+            if(this.props.userId) {
+                this.props.history.push('/home')
+            } else {
+                this.setState({
+                    renderPage: true
+                })
+            }
+        })
+    }
 
-        if(this.props.user) {
-            window.location.href = '/home'
-        }
+    confirmMessage() {
+        window.confirmationResult.confirm(this.state.code).then((result) => {
+            var user = result.user;
+            this.props.setUser(user)
+
+            if(this.props.user) {
+                window.location.href = '/home'
+            }
+        }).catch((error) => {
+            console.log(error)
+        });
     }
 
     onButtonClick(e) {
         e.preventDefault()
-
-        var phoneNumber = getPhoneNumberFromUserInput();
-        var appVerifier = window.recaptchaVerifier;
-        auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then(function (confirmationResult) {
-                this.setState({entered:true})
+        var appVerifier = window.recaptchaVerifier
+        
+        if(this.state.buttonShouldSend) {
+            this.confirmMessage()
+        } else {
+        auth.signInWithPhoneNumber(this.state.number, appVerifier)
+            .then((confirmationResult) => {
                 window.confirmationResult = confirmationResult
-                confirmationResult.confirm(this.state.code).then(function (result) {
-                    var user = result.user;
-                    this.props.setUser(user)
-
-                    if(this.props.user) {
-                        window.location.href = '/home'
-                    }
-                  }).catch(function (error) {
-                    this.setState({isError:true})
-                  });
-            }).catch(function (error) {
-                window.recaptchaVerifier.render().then(function(widgetId) {
-                    grecaptcha.reset(widgetId);
-                    this.setState({isError:true})
-                })
+                this.setState({hasSent: true, buttonShouldSend: true})
+            }).catch((error) => {
+                console.log(error)
             })
+        }
     }
 
     onChange(e) {
-        const code = e.currentTarget.value
-
-        this.setState({
-            code
-        })
+        this.setState({ [e.target.name]: e.target.value })
     }
 
     render() {
-        <Fragment>
-            <Navigation/>
-            <Landing button="Login" onButtonClick={this.onButtonClick}/>
-            {this.state.entered ? <Input name="code" onChange={this.onChange} placeholder="Please enter your confirmation code." type="text"></Input> : ''}
-        </Fragment>
+        const numberInput = <Input name="number" value={this.state.number} onChange={event => this.onChange(event)} placeholder="Please enter your cellphone number to login via sms." type="text"></Input>
+        const codeInput = <Input name="code" value={this.state.code} onChange={event => this.onChange(event)} placeholder="Message sent, please verify your code." type="text"></Input>
+
+        return (
+            <Fragment>
+                <Navigation/>
+                {this.state.renderPage ? <Landing inputRender={this.state.hasSent ? codeInput : numberInput} buttonType="Login" onButtonClick={this.onButtonClick}/> : ''}
+            </Fragment>
+        )
     }
 }
 

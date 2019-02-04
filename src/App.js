@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { Provider } from 'react-redux'
-
-import store from './store'
 
 import Home from './views/Home'
 import Login from './views/Login'
 import OneRecipe from './views/OneRecipe'
 
 import './App.css';
-import PostRecipe from './components/PostRecipe';
+import PostRecipe from './components/PostRecipe'
+
 
 class App extends Component {
+  
   render() {
     return (
-      <Provider store={store}>
         <div className="App">
           <Router>
             <Switch>
@@ -25,9 +23,8 @@ class App extends Component {
             </Switch>
           </Router>
         </div>
-      </Provider>
     );
   }
 }
 
-export default App;
+export default App

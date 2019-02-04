@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { Jumbotron, Button } from 'reactstrap';
-
+import firebase from '../services/firebase'
 import './Landing.css'
 
 export default class Landing extends Component {
-  constructor(props) {
-    super(props)
 
-    this.onClick = this.onClick.bind(this)
+  componentDidMount() {
+    if(document.querySelector('#sign-in-button')) {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+        'size': 'invisible'
+      });
+    }
   }
  
   render() {
@@ -19,8 +22,9 @@ export default class Landing extends Component {
           <hr className="my-2" />
           <p> It's just a place where you can add, edit and delete recipes.</p>
           <p className="lead">
-            {this.props.button === 'button' ? <Button onClick={this.props.onButtonClick} className="mt-3" color="primary">Recent recipes</Button> :
-            ''}
+            {this.props.inputRender}
+            {this.props.buttonType === 'Login' ? <Button onClick={this.props.onButtonClick} id="sign-in-button" className="mt-3" color="primary">Login with phone Number</Button> :
+            <Button onClick={this.props.onButtonClick} className="mt-3" color="primary">Recent recipes</Button>}
           </p>
         </Jumbotron>
       </div>

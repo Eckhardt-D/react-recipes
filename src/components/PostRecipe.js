@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import update from 'immutability-helper'
 import newUid from 'uuid/v1'
+import {auth} from '../services/firebase'
 
 import { createRecipe } from '../actions/recipeActions'
 import IngredientInput from './IngredientInput'
@@ -29,6 +30,10 @@ class PostForm extends Component {
     this.onSubmit = this.onSubmit.bind(this)
     this.addIngredient = this.addIngredient.bind(this)
     this.uploadImage = this.uploadImage.bind(this)
+  }
+
+  componentWillMount() {
+    auth.onAuthStateChanged(user => !user ? window.location.href = '/' : null) 
   }
 
   onChange(e) {

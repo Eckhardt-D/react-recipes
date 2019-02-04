@@ -8,7 +8,6 @@ export const fetchRecipes = userId => dispatch => {
     query.forEach(doc => {
       recipes.push(doc.data())
     })
-    console.log(recipes)
     dispatch({
       type: FETCH_RECIPES,
       payload: recipes

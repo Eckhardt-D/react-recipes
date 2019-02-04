@@ -4,10 +4,12 @@ import { Jumbotron, Button } from 'reactstrap';
 import './Landing.css'
 
 export default class Landing extends Component {
-  scrollScreen() {
-    console.log('clicked')
-    window.scrollTo({left: 0, top: 970, behavior: 'smooth'})
+  constructor(props) {
+    super(props)
+
+    this.onClick = this.onClick.bind(this)
   }
+ 
   render() {
     return (
       <div className="landingContainer">
@@ -17,7 +19,8 @@ export default class Landing extends Component {
           <hr className="my-2" />
           <p> It's just a place where you can add, edit and delete recipes.</p>
           <p className="lead">
-            <Button onClick={this.scrollScreen} className="mt-3" color="primary">Recent recipes</Button>
+            {this.props.button === 'button' ? <Button onClick={this.props.onButtonClick} className="mt-3" color="primary">Recent recipes</Button> :
+            ''}
           </p>
         </Jumbotron>
       </div>

@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 
 import Home from './views/Home'
+import Login from './views/Login'
 import OneRecipe from './views/OneRecipe'
 
 import './App.css';
@@ -17,7 +18,8 @@ class App extends Component {
         <div className="App">
           <Router>
             <Switch>
-              <Route exact path='/' component={Home}/>
+              <Route exact path='/' component={Login}/>
+              <Route exact path='/home' component={Home}/>
               <Route exact path='/recipe/:id' component={OneRecipe}/>
               <Route exact path='/new' component={PostRecipe}/>
             </Switch>

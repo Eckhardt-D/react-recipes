@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.2.1",
+    "firebase": "^5.8.2",
     "immutability-helper": "^3.0.0",
     "localforage": "^1.7.3",
     "react": "^16.7.0",

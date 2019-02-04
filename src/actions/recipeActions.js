@@ -1,35 +1,32 @@
-import { FETCH_RECIPES } from './types';
-import localforage from 'localforage'
+import { FETCH_RECIPES, NEW_RECIPE } from './types'
+import { db } from '../services/firebase'
 
-export const fetchRecipes = () => dispatch => {
-  localforage.getItem('recipes').then(recipes => {
-    if(recipes) {
-      dispatch({
-        type: FETCH_RECIPES,
-        payload: recipes
-      })
-    } else {
-      dispatch({
-        type: FETCH_RECIPES,
-        payload: []
-      })
-    }
-  })
-};
-
-export const createRecipe = recipeData => dispatch => {
-    localforage.getItem('recipes').then(data => {
-      if(data) {
-        let newData = [...data, recipeData]
-        localforage.setItem('recipes', newData)
-      } else {
-        localforage.setItem('recipes', [recipeData])
-      }
+export const fetchRecipes = userId => dispatch => {
+  let recipes = []
+  db.collection('recipes').where('createdBy', '==', userId).get()
+  .then(query => {
+    query.forEach(doc => {
+      recipes.push(doc.data())
     })
-    .catch(e => console.log(e))
-
+    console.log(recipes)
     dispatch({
       type: FETCH_RECIPES,
-      payload: recipeData
+      payload: recipes
     })
-};
+  })
+  .catch(e => e)
+}
+
+export const createRecipe = recipeData => dispatch => {
+  return new Promise((resolve, reject) => {
+    db.collection('recipes').doc().set(recipeData)
+    .then(() => {
+      dispatch({
+        type: NEW_RECIPE,
+        payload: recipeData
+      })
+      return resolve('done')
+    })
+    .catch(e => reject(e))
+  })
+}

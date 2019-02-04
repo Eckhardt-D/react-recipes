@@ -17,10 +17,13 @@ import Navigation from '../components/Navigation'
 
 class OneRecipe extends Component {
   componentWillMount() {
-    auth.onAuthStateChanged(user => !user ? window.location.href = '/' : null) 
-  }
-  componentDidMount() {
-    this.props.fetchRecipes()
+    auth.onAuthStateChanged(user => { 
+      if(!user) {
+        window.location.href = '/'
+      } else {
+        this.props.fetchRecipes(user.uid)
+      }
+    }) 
   }
 
   render() {
@@ -29,6 +32,7 @@ class OneRecipe extends Component {
       if(recipe.id === this.props.match.params.id) {
         theRecipe = (
           <Col sm="12" lg="10" className="mx-auto mb-5">
+            
             <img 
             width="100%"
             src={recipe.image} alt="MyRecipe"/>
@@ -47,7 +51,6 @@ class OneRecipe extends Component {
             <hr/>
             <h2 className="display-6">Instructions</h2>
             <p>{recipe.instructions}</p>
-            <p><small>by {recipe.createdBy}</small></p>
             <hr/>
             <a href="/">Back to recipes</a>
           </Col>
@@ -59,6 +62,7 @@ class OneRecipe extends Component {
         <Navigation/>
         <Container>
           <Row>
+            {!this.props.recipes.length ? <div className="loader"></div> : ''}
             {theRecipe}
           </Row>
         </Container>

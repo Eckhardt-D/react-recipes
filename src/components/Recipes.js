@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchRecipes } from '../actions/recipeActions';
+import { auth } from '../services/firebase'
 
 import { 
   Card, 
@@ -18,7 +19,11 @@ import './Recipes.css'
 
 class Recipes extends Component {
   componentDidMount() {
-    this.props.fetchRecipes()
+    auth.onAuthStateChanged(user => {
+      if(user) {
+        this.props.fetchRecipes(user.uid)
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,6 +60,7 @@ class Recipes extends Component {
     return (
       <Container className="homeContent">
         <Row className="justify-content-center">
+          {!this.props.recipes.length ? <div className="loader"></div> : ''}
           {recipeCards}
         </Row>
       </Container>

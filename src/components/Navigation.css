@@ -1,5 +1,6 @@
 .searchList2 {
   position: absolute;
+  cursor: pointer;
   margin-top: 5px;
   width: 100%;
   display: none;

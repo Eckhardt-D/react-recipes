@@ -9,7 +9,7 @@ import { createRecipe } from '../actions/recipeActions'
 import IngredientInput from './IngredientInput'
 import Navigation from './Navigation'
 
-import { FormGroup, Label, FormText, InputGroup, Input, Container, Button, Row, Col } from 'reactstrap';
+import { FormGroup, Label, FormText, InputGroup, Input, Container, Button } from 'reactstrap';
 
 class PostForm extends Component {
   constructor(props) {
@@ -33,7 +33,13 @@ class PostForm extends Component {
   }
 
   componentWillMount() {
-    auth.onAuthStateChanged(user => !user ? window.location.href = '/' : null) 
+    auth.onAuthStateChanged(user => {
+      if(!user) {
+        window.location.href = '/'
+      } else {
+        this.setState({createdBy: user.uid})
+      }
+    }) 
   }
 
   onChange(e) {
@@ -70,9 +76,11 @@ class PostForm extends Component {
       time: this.state.time
     }
 
-    this.props.createRecipe(recipe)
-    this.setState({isLoading: false})
-    window.location.href = '/'
+    this.props.createRecipe(recipe).then(() => {
+      this.setState({isLoading: false})
+      window.location.href = '/'
+    })
+    .catch(e => e)
   }
 
   setImage(file) {
@@ -104,24 +112,15 @@ class PostForm extends Component {
         <h1>Add Recipe</h1>
         <form onSubmit={this.onSubmit}>
           <div>
-            <InputGroup>
-              <Input required onChange={this.onChange} name="name" placeholder="Recipe name" />
-            </InputGroup>
+              <InputGroup>
+                <Input required onChange={this.onChange} name="name" placeholder="Recipe name" />
+              </InputGroup>
           </div>
           <br />
           <div>
-            <Row>
-              <Col>
-                <InputGroup>
-                  <Input required onChange={this.onChange} name="createdBy" placeholder="Recipe Creator" />
-                </InputGroup>
-              </Col>
-              <Col>
-                <InputGroup>
-                  <Input required type="number" onChange={this.onChange} name="time" placeholder="Cook Time (Minutes)" />
-                </InputGroup>
-              </Col>
-            </Row>
+              <InputGroup>
+                <Input required type="number" onChange={this.onChange} name="time" placeholder="Cook Time (Minutes)" />
+              </InputGroup>
           </div>
           <br />
           <div>

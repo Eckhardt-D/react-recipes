@@ -3,12 +3,12 @@ import 'firebase/auth'
 import 'firebase/firestore'
 
 var config = {
-    apiKey: "AIzaSyAQJUMnScIybdFG8Wi8f_ODivZlMuDDOqk",
-    authDomain: "realrecipebook.firebaseapp.com",
-    databaseURL: "https://realrecipebook.firebaseio.com",
-    projectId: "realrecipebook",
-    storageBucket: "realrecipebook.appspot.com",
-    messagingSenderId: "994738615935"
+    apiKey: process.env.REACT_APP_API,
+    authDomain: process.env.REACT_APP_AUTH,
+    databaseURL: process.env.REACT_APP_DBURL,
+    projectId: process.env.REACT_APP_ID,
+    storageBucket: process.env.REACT_APP_STORAGE,
+    messagingSenderId: process.env.REACT_APP_MSGID
 };
 
 firebase.initializeApp(config)
